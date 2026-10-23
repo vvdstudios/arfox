@@ -33,6 +33,9 @@
   #loader p { font-weight:700; opacity:.8; margin-top:10px; }
   .spin { width:54px; height:54px; border-radius:50%; border:5px solid rgba(255,255,255,.2); border-top-color:var(--accent); animation:spin 1s linear infinite; margin-top:26px; }
   @keyframes spin { to { transform:rotate(360deg); } }
+  #startBtn { display:none; margin-top:28px; padding:16px 44px; border:0; border-radius:999px; background:var(--accent); color:#fff; font:900 20px 'Nunito',system-ui,sans-serif; box-shadow:0 10px 30px rgba(255,122,26,.45); }
+  #startBtn.show { display:block; }
+  #startBtn.show ~ .spin, #loader:has(#startBtn.show) .spin { display:none; }
   #ring { position:absolute; width:60vmin; height:60vmin; left:50%; top:50%; transform:translate(-50%,-50%); border-radius:50%; border:3px dashed rgba(255,255,255,.6); opacity:0; animation:none; }
   #ring.show { opacity:1; animation:pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{ transform:translate(-50%,-50%) scale(.9);} 50%{ transform:translate(-50%,-50%) scale(1);} }
@@ -48,7 +51,7 @@
   <div id="ballBtn"></div>
   <div id="banner"><h1 id="bannerTitle">Yum!</h1><p id="bannerSub">Fox is your friend now</p></div>
 </div>
-<div id="loader"><h1>Fox <span>GO</span></h1><p id="loadMsg">Starting camera…</p><div class="spin"></div></div>
+<div id="loader"><h1>Fox <span>GO</span></h1><p id="loadMsg">Loading…</p><div class="spin"></div><button id="startBtn">Tap to start</button></div>
 
 <script src="lib/three.min.js"></script>
 <script src="lib/GLTFLoader.js"></script>

@@ -394,6 +394,17 @@
   const boot = async () => {
     ui.loadMsg.textContent = 'Loading Fox…'
     await Promise.all([loadFox(), loadApple(), loadBlackTex()])
+    // iOS 13+ needs motion permission from a user gesture, and camera prompts are more reliable after a tap
+    await new Promise((resolve) => {
+      ui.loadMsg.textContent = 'Ready'
+      const btn = document.getElementById('startBtn')
+      btn.classList.add('show')
+      btn.addEventListener('click', async () => {
+        btn.classList.remove('show')
+        try { if (window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === 'function') await DeviceMotionEvent.requestPermission() } catch (e) { console.warn('motion permission', e) }
+        resolve()
+      }, { once: true })
+    })
     ui.loadMsg.textContent = 'Starting camera…'
     XR8.XrController.configure({ disableWorldTracking: false, scale: 'responsive' })
     XR8.addCameraPipelineModules([
@@ -404,7 +415,10 @@
     ])
     XR8.addCameraPipelineModule({
       name: 'errors',
-      onCameraStatusChange: ({ status }) => { if (status === 'failed') ui.loadMsg.textContent = 'Camera permission denied — allow camera and reload' },
+      onCameraStatusChange: ({ status }) => {
+        if (status === 'requesting') ui.loadMsg.textContent = 'Allow camera access…'
+        if (status === 'failed') { ui.loadMsg.textContent = 'Camera blocked — allow camera in browser settings and reload'; ui.loader.classList.remove('hide') }
+      },
       onException: (e) => { ui.loadMsg.textContent = 'Error: ' + (e && e.message || e); ui.loader.classList.remove('hide'); console.error(e) },
     })
     XR8.run({ canvas, allowedDevices: XR8.XrConfig.device().ANY })
