@@ -1,0 +1,15 @@
+{
+  "name": "fox-go",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "node setup.js",
+    "cert": "openssl req -x509 -newkey rsa:2048 -nodes -keyout certs/key.pem -out certs/cert.pem -days 365 -subj /CN=localhost"
+  },
+  "dependencies": {
+    "@8thwall/engine-binary": "^1.0.0",
+    "three": "^0.147.0",
+    "ws": "^8.22.0"
+  }
+}

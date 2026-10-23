@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Fox GO</title>
+<link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --accent:#ff7a1a; --ink:#1b1f3a; --card:rgba(255,255,255,.92); }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { margin:0; height:100%; overflow:hidden; background:#000; font-family:'Nunito',system-ui,sans-serif; color:var(--ink); touch-action:none; user-select:none; -webkit-user-select:none; }
+  canvas#xr { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  #hud { position:fixed; inset:0; pointer-events:none; }
+  .pill { position:absolute; top:calc(env(safe-area-inset-top) + 14px); left:14px; background:var(--card); border-radius:999px; padding:8px 14px 8px 10px; display:flex; align-items:center; gap:8px; font-weight:900; font-size:16px; box-shadow:0 4px 16px rgba(0,0,0,.25); }
+  .pill .ball { width:22px; height:22px; border-radius:50%; background:linear-gradient(#e8313a 0 48%,#1b1f3a 48% 52%,#fff 52%); border:2px solid #1b1f3a; position:relative; }
+  .pill .ball::after { content:''; position:absolute; left:50%; top:50%; width:7px; height:7px; border-radius:50%; background:#fff; border:2px solid #1b1f3a; transform:translate(-50%,-50%); }
+  .pill.right { left:auto; right:14px; }
+  #hint { position:absolute; left:50%; bottom:calc(env(safe-area-inset-bottom) + 140px); transform:translateX(-50%); background:rgba(27,31,58,.78); color:#fff; padding:10px 18px; border-radius:14px; font-weight:700; font-size:15px; white-space:nowrap; backdrop-filter:blur(6px); transition:opacity .3s; }
+  #hint.hide { opacity:0; }
+  #ballBtn { position:absolute; left:50%; bottom:calc(env(safe-area-inset-bottom) + 34px); transform:translateX(-50%); width:84px; height:84px; border-radius:50%; background:var(--card); border:4px solid #1b1f3a; box-shadow:0 8px 24px rgba(0,0,0,.4); pointer-events:none; transition:transform .15s, opacity .3s; display:flex; align-items:center; justify-content:center; font-size:46px; line-height:1; }
+  #ballBtn::after { content:'\1F34E'; }
+  #ballBtn.armed { transform:translateX(-50%) scale(1.08); }
+  #ballBtn.hide { opacity:0; }
+  #banner { position:absolute; left:50%; top:38%; transform:translate(-50%,-50%) scale(.6); opacity:0; background:var(--card); padding:18px 28px; border-radius:22px; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.35); transition:transform .35s cubic-bezier(.2,1.4,.4,1), opacity .25s; }
+  #banner.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  #banner h1 { margin:0; font-size:30px; font-weight:900; color:var(--accent); letter-spacing:.5px; }
+  #banner p { margin:6px 0 0; font-weight:700; font-size:15px; opacity:.75; }
+  #loader { position:fixed; inset:0; background:radial-gradient(circle at 50% 30%, #2a3061, #0d1024); display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; z-index:10; transition:opacity .4s; }
+  #loader.hide { opacity:0; pointer-events:none; }
+  #loader h1 { font-size:44px; font-weight:900; margin:0; letter-spacing:1px; }
+  #loader h1 span { color:var(--accent); }
+  #loader p { font-weight:700; opacity:.8; margin-top:10px; }
+  .spin { width:54px; height:54px; border-radius:50%; border:5px solid rgba(255,255,255,.2); border-top-color:var(--accent); animation:spin 1s linear infinite; margin-top:26px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  #ring { position:absolute; width:60vmin; height:60vmin; left:50%; top:50%; transform:translate(-50%,-50%); border-radius:50%; border:3px dashed rgba(255,255,255,.6); opacity:0; animation:none; }
+  #ring.show { opacity:1; animation:pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{ transform:translate(-50%,-50%) scale(.9);} 50%{ transform:translate(-50%,-50%) scale(1);} }
+</style>
+</head>
+<body>
+<canvas id="xr"></canvas>
+<div id="hud">
+  <div class="pill">&#x1F34E; <span id="count">0</span>&nbsp;fed</div>
+  <div class="pill right">🦊 <span id="status">Searching…</span></div>
+  <div id="ring"></div>
+  <div id="hint">Point at the floor and tap to find a Fox</div>
+  <div id="ballBtn"></div>
+  <div id="banner"><h1 id="bannerTitle">Yum!</h1><p id="bannerSub">Fox is your friend now</p></div>
+</div>
+<div id="loader"><h1>Fox <span>GO</span></h1><p id="loadMsg">Starting camera…</p><div class="spin"></div></div>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/GLTFLoader.js"></script>
+<script async src="xr/xr.js" data-preload-chunks="slam"></script>
+<script src="app.js"></script>
+</body>
+</html>
